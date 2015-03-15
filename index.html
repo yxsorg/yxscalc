@@ -148,7 +148,7 @@
     function readFile(fi) {
         var fr = new FileReader();
         fr.onload = parseFile;
-        fr.readAsText(fi);
+        if(fi){fr.readAsText(fi)};
     }
 
     function calc() {
