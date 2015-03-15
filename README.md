@@ -1,2 +1,2 @@
 # yxscalc
-simple tool calc data
+Simple tool calculate data.
