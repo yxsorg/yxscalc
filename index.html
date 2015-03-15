@@ -54,7 +54,7 @@
                 <button id="bt_run" type="button" class="btn btn-lg btn-danger">Calculate</button>
             </div>
             <div class="col-xs-5 btn btn-info btn-lg">
-                <a  href="https://github.com/yxsicd/yxscalc">View on GitHub</a>
+                <a href="https://github.com/yxsicd/yxscalc">View on GitHub</a>
             </div>
         </div>
     </header>
@@ -110,9 +110,9 @@
     </footer>
 </div>
 
-<script type="default_code" id="calc_script">
+<script id="calc_script">
 
-    function calc() {
+    function intersection() {
         var d1 = src_1.value;
         var d2 = src_2.value;
         var arr1 = d1.split("\n");
@@ -121,13 +121,42 @@
         output_1.value = arr_ret.join('\n');
     }
 
+    function parseFile(d) {
+        str = d.target.result;
+        arr = str.split("\n");
+        retarr = [];
+        retstrarr = [];
+        for (var i = 0; i < arr.length; i++) {
+            var nowstr = arr[i];
+            var nextstr = arr[i + 1]
+            if (nowstr.indexOf(">sw:") != -1 && nowstr.indexOf("_HUMAN") != -1) {
+                var xx = nowstr.replace(/>sw:(.*_.*)\/(\d*)-(\d*) motif=PATTERN RecName: Full=(.*)/, "$1~$2~$3~$4");
+                var xxarr = xx.split("~");
+                var col4 = xxarr[3].split(";")[0];
+                xxarr[3] = col4;
+                xxarr[4] = nextstr.substr(0, 6);
+                retarr[retarr.length] = xxarr;
+                retstrarr[retstrarr.length] = xxarr.join("#");
+            }
+        }
+
+        console.log(retarr);
+        console.log(retstrarr);
+        console.log(retstrarr.join("\n"));
+    }
+
+    function readFile(fi) {
+        var fr = new FileReader();
+        fr.onload = parseFile;
+        fr.readAsText(fi);
+    }
+
+    function calc() {
+        readFile(file_1.files[0]);
+    }
+
+
     calc();
-
-
-
-
-
-
 
 
 </script>
