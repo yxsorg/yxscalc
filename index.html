@@ -21,6 +21,7 @@
     <!-- Latest compiled and minified JavaScript -->
     <script src="javascripts/bootstrap-3.3.2-dist/js/bootstrap.min.js"></script>
 
+    <script src="javascripts/papaparse.min.js"></script>
 
     <title>Yxscalc</title>
 
@@ -121,41 +122,85 @@
         output_1.value = arr_ret.join('\n');
     }
 
-    function parseFile(d) {
-        str = d.target.result;
-        arr = str.split("\n");
-        retarr = [];
-        retstrarr = [];
-        for (var i = 0; i < arr.length; i++) {
-            var nowstr = arr[i];
-            var nextstr = arr[i + 1]
-            if (nowstr.indexOf(">sw:") != -1 && nowstr.indexOf("_HUMAN") != -1) {
-                var xx = nowstr.replace(/>sw:(.*_.*)\/(\d*)-(\d*) motif=PATTERN RecName: Full=(.*)/, "$1~$2~$3~$4");
-                var xxarr = xx.split("~");
-                var col4 = xxarr[3].split(";")[0];
-                xxarr[3] = col4;
-                xxarr[4] = nextstr.substr(0, 6);
-                retarr[retarr.length] = xxarr;
-                retstrarr[retstrarr.length] = xxarr.join("#");
+    function parseFile1() {
+        var fi = file_1.files[0];
+        var fr = new FileReader();
+        fr.onload = (function parseFile(d) {
+            str = d.target.result;
+            arr = str.split("\n");
+            retarr = [];
+            retstrarr = [];
+            for (var i = 0; i < arr.length; i++) {
+                var nowstr = arr[i];
+                var nextstr = arr[i + 1]
+                if (nowstr.indexOf(">sw:") != -1 && nowstr.indexOf("_HUMAN") != -1) {
+                    var xx = nowstr.replace(/>sw:(.*_.*)\/(\d*)-(\d*) motif=PATTERN RecName: Full=(.*)/, "$1~$2~$3~$4");
+                    var xxarr = xx.split("~");
+                    var col4 = xxarr[3].split(";")[0];
+                    xxarr[3] = col4;
+                    xxarr[4] = nextstr.substr(0, 6);
+                    retarr[retarr.length] = xxarr;
+                    retstrarr[retstrarr.length] = xxarr.join("\t");
+                }
+            }
+
+            console.log(retarr);
+            console.log(retstrarr);
+            var outputstr = retstrarr.join("\n");
+            output_1.value = outputstr;
+        });
+        if (fi) {
+            fr.readAsText(fi)
+        }
+        ;
+    }
+
+
+    function findmapping() {
+        var results = Papa.parse(src_1.value);
+        var alldata = results.data;
+        obj_ab = {}, obj_cd = {}, obj_ce = {}, all_d = [];
+
+
+        for (var i = 0; i < alldata.length; i++) {
+            var data = alldata[i];
+            if (data[5]) {
+                all_d[all_d.length] = data[5]
             }
         }
 
-        console.log(retarr);
-        console.log(retstrarr);
-        var outputstr=retstrarr.join("\n");
-        output_1.value=outputstr;
-    }
 
-    function readFile(fi) {
-        var fr = new FileReader();
-        fr.onload = parseFile;
-        if(fi){fr.readAsText(fi)};
+        for (var i = 0; i < alldata.length; i++) {
+            var data = alldata[i];
+            if (data[0]) {
+                obj_ab[data[0]] = data[1]
+            }
+            if (data[2] && all_d.indexOf(data[3]) != -1 ) {
+                obj_cd[data[2]] = data[3];
+                obj_ce[data[2]] = data[4];
+            }
+        }
+
+        var keys = _.keys(obj_ab);
+        var allret = [];
+        for (var i = 0; i < keys.length; i++) {
+            var key = keys[i];
+            var ret = [key, obj_ab[key], obj_cd[key], obj_ce[key]];
+            console.log(key);
+            console.log(ret);
+            allret[allret.length] = ret;
+        }
+
+        var retstr = Papa.unparse(allret, {delimiter: "\t"});
+        output_1.value = retstr;
+        console.log(retstr);
+
+
     }
 
     function calc() {
-        readFile(file_1.files[0]);
+        intersection();
     }
-
 
     calc();
 
