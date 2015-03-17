@@ -51,10 +51,10 @@
     <header>
 
         <div class="row">
-            <div class="col-xs-4">
+            <div class="col-xs-5">
                 <button id="bt_run" type="button" class="btn btn-lg btn-danger">Calculate</button>
             </div>
-            <div class="col-xs-4 col-xs-offset-4 btn btn-info btn-sm">
+            <div class="col-xs-5 btn btn-info btn-lg">
                 <a href="https://github.com/yxsicd/yxscalc">View on GitHub</a>
             </div>
         </div>
@@ -71,7 +71,7 @@
                     1
                     2
                 </textarea>
-                <input id="file_1" class="col-xs-12 btn btn-sm btn-danger" type="file"/>
+                <input id="file_1" class="col-xs-12 btn btn-lg btn-danger" type="file"/>
             </div>
             <div class="col-xs-6" style="height:100%">
                 <span class="col-xs-12 label label-primary">src_2</span>
@@ -79,7 +79,7 @@
                     2
                     3
                 </textarea>
-                <input id="file_2" class="col-xs-12 btn btn-sm btn-danger" type="file"/>
+                <input id="file_2" class="col-xs-12 btn btn-lg btn-danger" type="file"/>
             </div>
 
 
