@@ -22,6 +22,7 @@
     <script src="javascripts/bootstrap-3.3.2-dist/js/bootstrap.min.js"></script>
 
     <script src="javascripts/papaparse.min.js"></script>
+    <script src="javascripts/async.js"></script>
 
     <title>Yxscalc</title>
 
@@ -49,7 +50,6 @@
 <!-- HEADER -->
 <div id="header_wrap" class="outer">
     <header>
-
         <div class="row">
             <div class="col-xs-4">
                 <button id="bt_run" type="button" class="btn btn-lg btn-danger">Calculate</button>
@@ -81,11 +81,8 @@
                 </textarea>
                 <input id="file_2" class="col-xs-12 btn btn-sm btn-danger" type="file"/>
             </div>
-
-
         </div>
         <div class="row">
-
             <div class="col-xs-6">
                 <span class="col-xs-12 label label-primary">output_1</span>
                 <textarea class="col-xs-12 well  text-left text-nowrap" id="output_1" style="height: 200px;"></textarea>
@@ -121,6 +118,27 @@
         var arr_ret = _.intersection(arr1, arr2);
         output_1.value = arr_ret.join('\n');
     }
+
+    function dodata(err, datas) {
+        var results = Papa.parse(datas[0]);
+        var alldata = results.data;
+        console.log(alldata);
+    }
+
+    function getdata(file, callback) {
+        var fr = new FileReader();
+        fr.onload = (function (d) {
+            str = d.target.result;
+            callback(null, str);
+        });
+        file?fr.readAsText(file):callback(null, "");
+    }
+
+    function calcmain() {
+        var files = [file_1.files[0], file_2.files[0]];
+        async.map(files, getdata, dodata);
+    }
+
 
     function parseFile1() {
         var fi = file_1.files[0];
@@ -175,7 +193,7 @@
             if (data[0]) {
                 obj_ab[data[0]] = data[1]
             }
-            if (data[2] && all_d.indexOf(data[3]) != -1 ) {
+            if (data[2] && all_d.indexOf(data[3]) != -1) {
                 obj_cd[data[2]] = data[3];
                 obj_ce[data[2]] = data[4];
             }
@@ -203,6 +221,7 @@
     }
 
     calc();
+    calcmain();
 
 
 </script>
