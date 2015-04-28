@@ -48,7 +48,7 @@
 <body>
 
 <!-- HEADER -->
-<div id="header_wrap" class="outer">
+<div id="header_wrap" class="row">
     <header>
         <div class="row">
             <div class="col-xs-4">
@@ -62,45 +62,57 @@
 </div>
 
 <!-- MAIN CONTENT -->
-<div id="main_content_wrap" class="outer">
-    <div class="container-fluid">
-        <div class="row" style="height:100%">
-            <div class="col-xs-6" style="height:100%">
-                <span class="col-xs-12 label label-primary">src_1</span>
+<div id="main_content_wrap" class="container-fluid">
+    <div class="row">
+        <div class="col-xs-2">
+            <div class="row">
+                <div class="col-xs-12"></div>
+            </div>
+            <div class="row">
+                <img src="index.html" id="ttimg" />
+            </div>
+            <div class="row"></div>
+            <div class="row">
+            </div>
+        </div>
+        <div class="col-xs-10">
+            <div class="row" style="height:100%">
+                <div class="col-xs-6" style="height:100%">
+                    <span class="col-xs-12 label label-primary">src_1</span>
                 <textarea class="col-xs-12 well text-left text-nowrap" style="height: 150px;" id="src_1">
                     1
                     2
                 </textarea>
-                <input id="file_1" class="col-xs-12 btn btn-sm btn-danger" type="file"/>
-            </div>
-            <div class="col-xs-6" style="height:100%">
-                <span class="col-xs-12 label label-primary">src_2</span>
+                    <input id="file_1" class="col-xs-12 btn btn-sm btn-danger" type="file"/>
+                </div>
+                <div class="col-xs-6" style="height:100%">
+                    <span class="col-xs-12 label label-primary">src_2</span>
                 <textarea class="col-xs-12 well text-left text-nowrap" id="src_2" style="height: 150px;">
                     2
                     3
                 </textarea>
-                <input id="file_2" class="col-xs-12 btn btn-sm btn-danger" type="file"/>
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-xs-6">
-                <span class="col-xs-12 label label-primary">output_1</span>
-                <textarea class="col-xs-12 well  text-left text-nowrap" id="output_1" style="height: 200px;"></textarea>
-            </div>
-            <div class="col-xs-6" style="height:100%">
-                <div>
-                    <span class="col-xs-12 label label-primary">script_1</span>
+            <div class="row">
+                <div class="col-xs-6">
+                    <span class="col-xs-12 label label-primary">output_1</span>
+                    <textarea class="col-xs-12 well  text-left text-nowrap" id="output_1"
+                              style="height: 200px;"></textarea>
+                </div>
+                <div class="col-xs-6" style="height:100%">
+                    <div>
+                        <span class="col-xs-12 label label-primary">script_1</span>
              <pre class="col-xs-12" id="editor1">
              </pre>
+                    </div>
                 </div>
             </div>
         </div>
-
     </div>
 </div>
 
 <!-- FOOTER  -->
-<div id="footer_wrap" class="outer">
+<div id="footer_wrap" class="row">
     <footer class="inner">
         <p class="copyright">Yxscalc maintained by <a href="https://github.com/yxsicd">yxsicd</a></p>
 
@@ -131,7 +143,7 @@
             str = d.target.result;
             callback(null, str);
         });
-        file?fr.readAsText(file):callback(null, "");
+        file ? fr.readAsText(file) : callback(null, "");
     }
 
     function calcmain() {
@@ -228,6 +240,10 @@
 
 
 <script src="javascripts/ace/src-min-noconflict/ace.js"></script>
+<script src="javascripts/jszip.min.js"></script>
+<script src="javascripts/jszip-utils.js"></script>
+
+<script src="javascripts/main.js"></script>
 <script>
 
     var editor = ace.edit("editor1");
