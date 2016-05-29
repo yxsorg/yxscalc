@@ -127,7 +127,7 @@
         var d2 = src_2.value;
         var arr1 = d1.split("\n");
         var arr2 = d2.split("\n");
-        var arr_ret = _.intersection(arr1, arr2);
+        var arr_ret = _.difference(arr1, arr2);
         output_1.value = arr_ret.join('\n');
     }
 
