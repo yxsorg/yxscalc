@@ -52,7 +52,9 @@
     <header>
         <div class="row">
             <div class="col-xs-4">
-                <button id="bt_run" type="button" class="btn btn-lg btn-danger">Calculate</button>
+                <button id="bt_run" type="button" class="btn btn-lg btn-danger">运行</button>
+                <button id="bt_same" type="button" class="btn btn-lg btn-danger">交集</button>
+                <button id="bt_diff" type="button" class="btn btn-lg btn-danger">差集</button>
             </div>
             <div class="col-xs-4 col-xs-offset-4 btn btn-info btn-sm">
                 <a href="https://github.com/yxsicd/yxscalc">View on GitHub</a>
@@ -64,44 +66,37 @@
 <!-- MAIN CONTENT -->
 <div id="main_content_wrap" class="container-fluid">
     <div class="row">
-        <div class="col-xs-2">
-            <div class="row">
-                <div class="col-xs-12"></div>
-            </div>
-            <div class="row">
-                <img src="index.html" id="ttimg" />
-            </div>
-            <div class="row"></div>
-            <div class="row">
-            </div>
-        </div>
-        <div class="col-xs-10">
+        <div class="col-xs-12">
             <div class="row" style="height:100%">
                 <div class="col-xs-6" style="height:100%">
-                    <span class="col-xs-12 label label-primary">src_1</span>
+                    <span class="col-xs-12 label label-primary">集合1</span>
                 <textarea class="col-xs-12 well text-left text-nowrap" style="height: 150px;" id="src_1">
                     1
                     2
+                    相同
+                    不同
                 </textarea>
                     <input id="file_1" class="col-xs-12 btn btn-sm btn-danger" type="file"/>
                 </div>
                 <div class="col-xs-6" style="height:100%">
-                    <span class="col-xs-12 label label-primary">src_2</span>
+                    <span class="col-xs-12 label label-primary">集合2</span>
                 <textarea class="col-xs-12 well text-left text-nowrap" id="src_2" style="height: 150px;">
                     2
                     3
+                    相同
                 </textarea>
+                    <input id="file_2" class="col-xs-12 btn btn-sm btn-danger" type="file"/>
                 </div>
             </div>
             <div class="row">
                 <div class="col-xs-6">
-                    <span class="col-xs-12 label label-primary">output_1</span>
+                    <span class="col-xs-12 label label-primary">结果</span>
                     <textarea class="col-xs-12 well  text-left text-nowrap" id="output_1"
                               style="height: 200px;"></textarea>
                 </div>
                 <div class="col-xs-6" style="height:100%">
                     <div>
-                        <span class="col-xs-12 label label-primary">script_1</span>
+                        <span class="col-xs-12 label label-primary">脚本</span>
              <pre class="col-xs-12" id="editor1">
              </pre>
                     </div>
@@ -120,16 +115,8 @@
     </footer>
 </div>
 
-<script id="calc_script">
+<script id="calc_comm">
 
-    function intersection() {
-        var d1 = src_1.value;
-        var d2 = src_2.value;
-        var arr1 = d1.split("\n");
-        var arr2 = d2.split("\n");
-        var arr_ret = _.difference(arr1, arr2);
-        output_1.value = arr_ret.join('\n');
-    }
 
     function dodata(err, datas) {
         var results = Papa.parse(datas[0]);
@@ -199,7 +186,6 @@
             }
         }
 
-
         for (var i = 0; i < alldata.length; i++) {
             var data = alldata[i];
             if (data[0]) {
@@ -224,17 +210,41 @@
         var retstr = Papa.unparse(allret, {delimiter: "\t"});
         output_1.value = retstr;
         console.log(retstr);
-
-
     }
+
+
+</script>
+
+<script id="calc_same">
 
     function calc() {
-        intersection();
+        var d1 = src_1.value;
+        var d2 = src_2.value;
+        var arr1 = d1.split("\n");
+        var arr2 = d2.split("\n");
+        arr1= _.map(arr1, _.trim);
+        arr2= _.map(arr2, _.trim);
+        var arr_ret = _.intersection(arr1, arr2);
+        output_1.value = arr_ret.join('\n');
     }
-
     calc();
-    calcmain();
 
+</script>
+
+
+<script id="calc_diff">
+
+    function calc() {
+        var d1 = src_1.value;
+        var d2 = src_2.value;
+        var arr1 = d1.split("\n");
+        var arr2 = d2.split("\n");
+        arr1= _.map(arr1, _.trim);
+        arr2= _.map(arr2, _.trim);
+        var arr_ret = _.difference(arr1, arr2);
+        output_1.value = arr_ret.join('\n');
+    }
+    calc();
 
 </script>
 
@@ -253,7 +263,19 @@
 </script>
 
 <script>
-    editor.setValue(calc_script.innerText);
+
+    eval(calc_comm.innerText);
+
+    $("#bt_diff").click(function () {
+        editor.setValue(calc_diff.innerText);
+        eval(editor.getValue());
+    });
+
+    $("#bt_same").click(function () {
+        editor.setValue(calc_same.innerText);
+        eval(editor.getValue());
+    });
+
     $("#bt_run").click(function () {
         eval(editor.getValue());
     });
