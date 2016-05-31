@@ -7,38 +7,34 @@
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <meta name="description" content="Yxscalc : Simple tool calculate data.">
 
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
-
-    <script src="javascripts/lodash.min.js"></script>
-    <script src="javascripts/jquery-1.11.2.min.js"></script>
+    <script src="3rd/lodash.min.js"></script>
+    <script src="3rd/jquery-1.11.2.min.js"></script>
 
     <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="javascripts/bootstrap-3.3.2-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="3rd/bootstrap-3.3.2-dist/css/bootstrap.min.css">
 
     <!-- Optional theme -->
-    <link rel="stylesheet" href="javascripts/bootstrap-3.3.2-dist/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="3rd/bootstrap-3.3.2-dist/css/bootstrap-theme.min.css">
 
     <!-- Latest compiled and minified JavaScript -->
-    <script src="javascripts/bootstrap-3.3.2-dist/js/bootstrap.min.js"></script>
-
-    <script src="javascripts/papaparse.min.js"></script>
-    <script src="javascripts/async.js"></script>
+    <script src="3rd/bootstrap-3.3.2-dist/js/bootstrap.min.js"></script>
 
     <title>Yxscalc</title>
 
     <style type="text/css" media="screen">
 
-        .ace_editor {
-            position: relative !important;
-            border: 1px solid lightgray;
-            margin: auto;
-            width: 100%;
-            height: 200px;
-        }
-
         .scrollmargin {
             height: 100px;
             text-align: center;
+        }
+
+        .ace_editor {
+            margin: 0;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
         }
     </style>
 
@@ -51,12 +47,13 @@
 <div id="header_wrap" class="row">
     <header>
         <div class="row">
-            <div class="col-xs-4">
+            <div class="col-xs-1"></div>
+            <div class="col-xs-5">
                 <button id="bt_run" type="button" class="btn btn-lg btn-danger">运行</button>
                 <button id="bt_same" type="button" class="btn btn-lg btn-danger">交集</button>
                 <button id="bt_diff" type="button" class="btn btn-lg btn-danger">差集</button>
             </div>
-            <div class="col-xs-4 col-xs-offset-4 btn btn-info btn-sm">
+            <div class="col-xs-2 col-xs-offset-3 btn btn-info btn-sm">
                 <a href="https://github.com/yxsicd/yxscalc">View on GitHub</a>
             </div>
         </div>
@@ -70,20 +67,20 @@
             <div class="row" style="height:100%">
                 <div class="col-xs-6" style="height:100%">
                     <span class="col-xs-12 label label-primary">集合1</span>
-                <textarea class="col-xs-12 well text-left text-nowrap" style="height: 150px;" id="src_1">
-                    1
-                    2
-                    相同
-                    不同
+                <textarea class="col-xs-12 well text-left text-nowrap" style="height: 50%" id="src_1">
+1
+2
+相同
+不同
                 </textarea>
                     <input id="file_1" class="col-xs-12 btn btn-sm btn-danger" type="file"/>
                 </div>
                 <div class="col-xs-6" style="height:100%">
                     <span class="col-xs-12 label label-primary">集合2</span>
                 <textarea class="col-xs-12 well text-left text-nowrap" id="src_2" style="height: 150px;">
-                    2
-                    3
-                    相同
+2
+3
+相同
                 </textarea>
                     <input id="file_2" class="col-xs-12 btn btn-sm btn-danger" type="file"/>
                 </div>
@@ -109,123 +106,31 @@
 <!-- FOOTER  -->
 <div id="footer_wrap" class="row">
     <footer class="inner">
-        <p class="copyright">Yxscalc maintained by <a href="https://github.com/yxsicd">yxsicd</a></p>
+        <div class="row">
+            <div class="col-xs-3 col-xs-offset-10">
+                <p class="copyright">Yxscalc maintained by <a href="https://github.com/yxsicd">yxsicd</a></p>
+                <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+            </div>
+        </div>
 
-        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
     </footer>
 </div>
 
 <script id="calc_comm">
-
-
-    function dodata(err, datas) {
-        var results = Papa.parse(datas[0]);
-        var alldata = results.data;
-        console.log(alldata);
-    }
-
-    function getdata(file, callback) {
-        var fr = new FileReader();
-        fr.onload = (function (d) {
-            str = d.target.result;
-            callback(null, str);
-        });
-        file ? fr.readAsText(file) : callback(null, "");
-    }
-
-    function calcmain() {
-        var files = [file_1.files[0], file_2.files[0]];
-        async.map(files, getdata, dodata);
-    }
-
-
-    function parseFile1() {
-        var fi = file_1.files[0];
-        var fr = new FileReader();
-        fr.onload = (function parseFile(d) {
-            str = d.target.result;
-            arr = str.split("\n");
-            retarr = [];
-            retstrarr = [];
-            for (var i = 0; i < arr.length; i++) {
-                var nowstr = arr[i];
-                var nextstr = arr[i + 1]
-                if (nowstr.indexOf(">sw:") != -1 && nowstr.indexOf("_HUMAN") != -1) {
-                    var xx = nowstr.replace(/>sw:(.*_.*)\/(\d*)-(\d*) motif=PATTERN RecName: Full=(.*)/, "$1~$2~$3~$4");
-                    var xxarr = xx.split("~");
-                    var col4 = xxarr[3].split(";")[0];
-                    xxarr[3] = col4;
-                    xxarr[4] = nextstr.substr(0, 6);
-                    retarr[retarr.length] = xxarr;
-                    retstrarr[retstrarr.length] = xxarr.join("\t");
-                }
-            }
-
-            console.log(retarr);
-            console.log(retstrarr);
-            var outputstr = retstrarr.join("\n");
-            output_1.value = outputstr;
-        });
-        if (fi) {
-            fr.readAsText(fi)
-        }
-        ;
-    }
-
-
-    function findmapping() {
-        var results = Papa.parse(src_1.value);
-        var alldata = results.data;
-        obj_ab = {}, obj_cd = {}, obj_ce = {}, all_d = [];
-
-
-        for (var i = 0; i < alldata.length; i++) {
-            var data = alldata[i];
-            if (data[5]) {
-                all_d[all_d.length] = data[5]
-            }
-        }
-
-        for (var i = 0; i < alldata.length; i++) {
-            var data = alldata[i];
-            if (data[0]) {
-                obj_ab[data[0]] = data[1]
-            }
-            if (data[2] && all_d.indexOf(data[3]) != -1) {
-                obj_cd[data[2]] = data[3];
-                obj_ce[data[2]] = data[4];
-            }
-        }
-
-        var keys = _.keys(obj_ab);
-        var allret = [];
-        for (var i = 0; i < keys.length; i++) {
-            var key = keys[i];
-            var ret = [key, obj_ab[key], obj_cd[key], obj_ce[key]];
-            console.log(key);
-            console.log(ret);
-            allret[allret.length] = ret;
-        }
-
-        var retstr = Papa.unparse(allret, {delimiter: "\t"});
-        output_1.value = retstr;
-        console.log(retstr);
-    }
-
 
 </script>
 
 <script id="calc_same">
 
     function calc() {
-        var d1 = src_1.value;
-        var d2 = src_2.value;
+        var d1 = src_1.getValue();
+        var d2 = src_2.getValue();
         var arr1 = d1.split("\n");
         var arr2 = d2.split("\n");
-        arr1= _.map(arr1, _.trim);
-        arr2= _.map(arr2, _.trim);
+        arr1 = _.map(arr1, _.trim);
+        arr2 = _.map(arr2, _.trim);
         var arr_ret = _.intersection(arr1, arr2);
-        output_1.value = arr_ret.join('\n');
+        output_1.setValue(arr_ret.join('\n'));
     }
     calc();
 
@@ -235,37 +140,53 @@
 <script id="calc_diff">
 
     function calc() {
-        var d1 = src_1.value;
-        var d2 = src_2.value;
+        var d1 = src_1.getValue();
+        var d2 = src_2.getValue();
         var arr1 = d1.split("\n");
         var arr2 = d2.split("\n");
-        arr1= _.map(arr1, _.trim);
-        arr2= _.map(arr2, _.trim);
+        arr1 = _.map(arr1, _.trim);
+        arr2 = _.map(arr2, _.trim);
         var arr_ret = _.difference(arr1, arr2);
-        output_1.value = arr_ret.join('\n');
+        output_1.setValue(arr_ret.join('\n'));
     }
     calc();
 
 </script>
 
 
-<script src="javascripts/ace/src-min-noconflict/ace.js"></script>
-<script src="javascripts/jszip.min.js"></script>
-<script src="javascripts/jszip-utils.js"></script>
-
-<script src="javascripts/main.js"></script>
+<script src="3rd/ace/src-min-noconflict/ace.js"></script>
 <script>
+    var defaultline=15;
 
     var editor = ace.edit("editor1");
     editor.setTheme("ace/theme/tomorrow_night_eighties");
     editor.session.setMode("ace/mode/javascript");
+    editor.setOption("minLines", defaultline);
+    editor.setOption("maxLines", defaultline);
+
+    var src_1 = ace.edit("src_1");
+    src_1.setTheme("ace/theme/tomorrow_night_eighties");
+    src_1.session.setMode("ace/mode/text");
+    src_1.setOption("minLines", defaultline);
+    src_1.setOption("maxLines", defaultline);
+
+    var src_2 = ace.edit("src_2");
+    src_2.setTheme("ace/theme/tomorrow_night_eighties");
+    src_2.session.setMode("ace/mode/text");
+    src_2.setOption("minLines", defaultline);
+    src_2.setOption("maxLines", defaultline);
+
+    var output_1 = ace.edit("output_1");
+    output_1.setTheme("ace/theme/tomorrow_night_eighties");
+    output_1.session.setMode("ace/mode/text");
+    //output_1.setAutoScrollEditorIntoView(true);
+    output_1.setOption("minLines", defaultline);
+    output_1.setOption("maxLines", defaultline);
+
 
 </script>
 
 <script>
-
-    eval(calc_comm.innerText);
-
     $("#bt_diff").click(function () {
         editor.setValue(calc_diff.innerText);
         eval(editor.getValue());
