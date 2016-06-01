@@ -36,6 +36,7 @@
             bottom: 0;
             left: 0;
             right: 0;
+            height: 700px;
         }
     </style>
 
@@ -48,7 +49,7 @@
 <div id="header_wrap" class="row">
     <header>
         <div class="row">
-            <div class="col-xs-1"></div>
+            <div class="col-xs-0"></div>
             <div class="col-xs-5">
                 <button id="bt_run" type="button" class="btn btn-lg btn-danger">运行</button>
             </div>
@@ -63,16 +64,22 @@
 <div id="main_content_wrap" class="container-fluid">
     <div class="row">
         <div class="col-xs-12">
-             <div class="row">
-                <div class="col-xs-12" style="height:100%">
-                    <div>
-                        <span class="col-xs-12 label label-primary">脚本</span>
-             <pre class="col-xs-12" id="editor1">
-             </pre>
+            <div class="row">
+                <div class="col-xs-6" style="height:100%">
+                    <div class="row">
+                        <span class="col-xs-12 label label-primary">脚本
+                        </span>
+                        <pre id="editor1">
+                        </pre>
                     </div>
+                    
                 </div>
+                <div class="col-xs-6" id="pp">
+                    </div>
             </div>
+
         </div>
+
     </div>
 </div>
 
@@ -92,14 +99,14 @@
 
 <script src="3rd/ace/src-min-noconflict/ace.js"></script>
 <script>
-    var defaultline = 15;
+    var defaultline = 30;
 
     var editor = ace.edit("editor1");
     editor.setTheme("ace/theme/tomorrow_night_eighties");
     editor.session.setMode("ace/mode/javascript");
     editor.setOption("minLines", defaultline);
     editor.setOption("maxLines", defaultline);
- 
+
 </script>
 
 <script type="mytt" id="runscript">
@@ -112,19 +119,19 @@
     function init() {
         scene = new THREE.Scene();
 
-        camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 10000);
-        camera.position.z = 1000;
+        camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 500);
+        camera.position.z = 400;
 
-        geometry = new THREE.BoxGeometry(700, 500, 900);
+        geometry = new THREE.BoxGeometry(300, 300, 200);
         material = new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: true});
 
         mesh = new THREE.Mesh(geometry, material);
         scene.add(mesh);
 
         renderer = new THREE.WebGLRenderer();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-
-        document.body.appendChild(renderer.domElement);
+        renderer.setSize(window.innerWidth/2, window.innerHeight*0.80);
+        pp.innerHTML="";
+        pp.appendChild(renderer.domElement);
 
     }
 
@@ -138,20 +145,19 @@
         renderer.render(scene, camera);
 
     }
+
 </script>
 
 
 <script>
-    
+
     editor.setValue(runscript.innerText)
-    
+
     $("#bt_run").click(function () {
         eval(editor.getValue());
     });
 
 </script>
-
-
 
 
 </body>
