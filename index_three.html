@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Yxscalc : Simple tool calculate data.">
+
+    <script src="3rd/lodash.min.js"></script>
+    <script src="3rd/jquery-1.11.2.min.js"></script>
+    <script src="3rd/three.min.js"></script>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="3rd/bootstrap-3.3.2-dist/css/bootstrap.min.css">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="3rd/bootstrap-3.3.2-dist/css/bootstrap-theme.min.css">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="3rd/bootstrap-3.3.2-dist/js/bootstrap.min.js"></script>
+
+    <title>Yxscalc</title>
+
+    <style type="text/css" media="screen">
+
+        .scrollmargin {
+            height: 100px;
+            text-align: center;
+        }
+
+        .ace_editor {
+            margin: 0;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+    </style>
+
+
+</head>
+
+<body>
+
+<!-- HEADER -->
+<div id="header_wrap" class="row">
+    <header>
+        <div class="row">
+            <div class="col-xs-1"></div>
+            <div class="col-xs-5">
+                <button id="bt_run" type="button" class="btn btn-lg btn-danger">运行</button>
+            </div>
+            <div class="col-xs-2 col-xs-offset-3 btn btn-info btn-sm">
+                <a href="https://github.com/yxsicd/yxscalc">View on GitHub</a>
+            </div>
+        </div>
+    </header>
+</div>
+
+<!-- MAIN CONTENT -->
+<div id="main_content_wrap" class="container-fluid">
+    <div class="row">
+        <div class="col-xs-12">
+             <div class="row">
+                <div class="col-xs-12" style="height:100%">
+                    <div>
+                        <span class="col-xs-12 label label-primary">脚本</span>
+             <pre class="col-xs-12" id="editor1">
+             </pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FOOTER  -->
+<div id="footer_wrap" class="row">
+    <footer class="inner">
+        <div class="row">
+            <div class="col-xs-3 col-xs-offset-10">
+                <p class="copyright">Yxscalc maintained by <a href="https://github.com/yxsicd">yxsicd</a></p>
+
+                <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+            </div>
+        </div>
+
+    </footer>
+</div>
+
+<script src="3rd/ace/src-min-noconflict/ace.js"></script>
+<script>
+    var defaultline = 15;
+
+    var editor = ace.edit("editor1");
+    editor.setTheme("ace/theme/tomorrow_night_eighties");
+    editor.session.setMode("ace/mode/javascript");
+    editor.setOption("minLines", defaultline);
+    editor.setOption("maxLines", defaultline);
+ 
+</script>
+
+<script type="mytt" id="runscript">
+    var scene, camera, renderer;
+    var geometry, material, mesh;
+
+    init();
+    animate();
+
+    function init() {
+        scene = new THREE.Scene();
+
+        camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 10000);
+        camera.position.z = 1000;
+
+        geometry = new THREE.BoxGeometry(700, 500, 900);
+        material = new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: true});
+
+        mesh = new THREE.Mesh(geometry, material);
+        scene.add(mesh);
+
+        renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        document.body.appendChild(renderer.domElement);
+
+    }
+
+    function animate() {
+
+        requestAnimationFrame(animate);
+
+        mesh.rotation.x += 0.05;
+        mesh.rotation.y += 0.06;
+
+        renderer.render(scene, camera);
+
+    }
+</script>
+
+
+<script>
+    
+    editor.setValue(runscript.innerText)
+    
+    $("#bt_run").click(function () {
+        eval(editor.getValue());
+    });
+
+</script>
+
+
+
+
+</body>
+</html>
